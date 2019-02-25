@@ -2,6 +2,7 @@ from src.main.service_info import ServiceInfo
 from src.main.command.command import Command
 from commands import getstatusoutput
 
+
 class SystemctlStatusCommand(Command):
 
     def __init__(self):

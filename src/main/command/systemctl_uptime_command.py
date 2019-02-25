@@ -1,20 +1,23 @@
 from src.main.command.command import Command
 from commands import getstatusoutput
+import datetime
+
+from src.main.service_info import ServiceInfo
 
 
 class SystemctlUptimeCommand(Command):
 
     def __init__(self):
-        super(SystemctlUptimeCommand, self).__init__("systemctl", "show --all")
+        super(SystemctlUptimeCommand, self).__init__("systemctl", "status")
 
     def execute(self, servicename):
-        command = self.command + " " + self.arg + " " + str(servicename) + " | grep \"ActiveEnterTimestampMonotonic\""
+        command = self.command + " " + self.arg + " " + str(servicename) + " | awk '/Active: active/{print $6 \" \"$7}'"
         command_output = getstatusoutput(command)
-        split_output = command_output[1].split("=")
+
+        service_started = datetime.datetime.strptime(command_output[1], "%Y-%m-%d %H:%M:%S")
+        now = datetime.datetime.now()
 
         # micros -> seconds
-        activity_output_seconds = long(split_output[1]) / 1000000
-        activity_output_minutes = activity_output_seconds / 60
+        activity_output_seconds = (now - service_started).total_seconds()
 
-
-        pass
+        return ServiceInfo("uptime", str(activity_output_seconds))
