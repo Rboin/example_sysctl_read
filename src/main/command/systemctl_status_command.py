@@ -1,4 +1,4 @@
-from src.main.ServiceInfo import ServiceInfo
+from src.main.service_info import ServiceInfo
 from src.main.command.command import Command
 from commands import getstatusoutput
 
